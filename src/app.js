@@ -2,7 +2,8 @@ import express from "express";
 
 const app = express();
 
-app.use("/test", (req, res) => {
+app.get("user/:userId/:name/:password", (req, res) => {
+  console.log(req.params);
   res.send("Hello from server!");
 });
 
