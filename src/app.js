@@ -5,7 +5,13 @@ const app = express();
 
 app.get("/admin", auth, (req, res) => {
   console.log(req.params);
-  res.send("Hello from server!");
+  throw new Error("Something went wrong");
+});
+
+app.use("/", (err, req, res, next) => {
+  if (err) {
+    res.status(500).send("Something went wrong");
+  }
 });
 
 app.listen(3000, () => {
