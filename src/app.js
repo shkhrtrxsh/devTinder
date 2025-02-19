@@ -1,8 +1,9 @@
-import express from "express";
+const express = require("express");
+const { auth } = require("./middlewares/auth");
 
 const app = express();
 
-app.get("user/:userId/:name/:password", (req, res) => {
+app.get("/admin", auth, (req, res) => {
   console.log(req.params);
   res.send("Hello from server!");
 });
