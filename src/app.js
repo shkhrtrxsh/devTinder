@@ -1,19 +1,31 @@
 const express = require("express");
-const { auth } = require("./middlewares/auth");
-
+const connectDB = require("./config/database");
+const User = require("./models/user");
 const app = express();
 
-app.get("/admin", auth, (req, res) => {
-  console.log(req.params);
-  throw new Error("Something went wrong");
-});
-
-app.use("/", (err, req, res, next) => {
-  if (err) {
-    res.status(500).send("Something went wrong");
+app.post("/signup", async (req, res) => {
+  const user = new User({
+    firstName: "new",
+    lastName: "user",
+    email: "newuser@example.com",
+    password: "password",
+    age: 25,
+    gender: "male",
+  });
+  try {
+    await user.save();
+    res.status(201).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
-});
+connectDB()
+  .then(() => {
+    app.listen(3000, () => {
+      console.log("Server is running on port 3000");
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
