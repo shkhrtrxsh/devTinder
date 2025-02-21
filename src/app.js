@@ -39,6 +39,28 @@ app.get("/feed", async (req, res) => {
   }
 });
 
+app.delete("/user", async (req, res) => {
+  const userId = req.body.userId;
+  try {
+    await User.findByIdAndDelete({ _id: userId });
+    res.send("User deleted");
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+//patch request to update the user
+app.patch("/user", async (req, res) => {
+  const userId = req.body.userId;
+  const updatedUser = req.body;
+  try {
+    await User.findByIdAndUpdate({ _id: userId }, updatedUser);
+    res.send("User updated");
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 connectDB()
   .then(() => {
     app.listen(3000, () => {
