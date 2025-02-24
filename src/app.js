@@ -5,7 +5,10 @@ const User = require("./models/user");
 const { validateSignUpData } = require("./utils/validation");
 const bcrypt = require("bcrypt");
 const app = express();
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 
+app.use(cookieParser());
 app.use(express.json());
 
 app.post("/signup", async (req, res) => {
@@ -40,7 +43,28 @@ app.post("/login", async (req, res) => {
     if (!isPasswordValid) {
       throw new Error("Invalid credentials");
     } else {
+      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+      res.cookie("token", token);
       res.status(200).json({ message: "Login successful" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+app.get("/profile", async (req, res) => {
+  try {
+    const cookies = req.cookies;
+    const { token } = cookies;
+
+    //validate the token
+    const isTokenValid = jwt.verify(token, process.env.JWT_SECRET);
+    const { userId } = isTokenValid;
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error("User not found");
+    } else {
+      res.status(200).json({ message: "Profile fetched successfully", user });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
