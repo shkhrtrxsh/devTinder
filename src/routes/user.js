@@ -15,6 +15,7 @@ userRouter.get("/user/requests/received", userAuth, async (req, res) => {
       "firstName",
       "lastName",
       "age",
+      "gender",
       "photoUrl",
       "skills",
     ]);
@@ -37,6 +38,7 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
         "firstName",
         "lastName",
         "age",
+        "gender",
         "photoUrl",
         "skills",
       ])
@@ -44,6 +46,7 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
         "firstName",
         "lastName",
         "age",
+        "gender",
         "photoUrl",
         "skills",
       ]);
@@ -54,6 +57,7 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
       return {
         name: user.firstName + " " + user.lastName,
         age: user.age,
+        gender: user.gender,
         photoUrl: user.photoUrl,
         skills: user.skills,
       };
