@@ -45,6 +45,9 @@ authRouter.post("/login", async (req, res) => {
     } else {
       const token = await user.getJWT();
       res.cookie("token", token, {
+        httpOnly: true,
+        secure: true, // Required for SameSite=None
+        sameSite: "None", // Enables cross-site usage
         expires: new Date(Date.now() + 8 * 3600000),
       });
       res.status(200).json({ message: "Login successful", user });
